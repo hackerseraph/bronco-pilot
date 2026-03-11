@@ -29,7 +29,8 @@ This is the first release of Bronco-Pilot, a custom fork of FrogPilot with advan
 **Installation on comma device:**
 1. On your comma 3/3X, go to Settings → Software
 2. Tap Install Custom Software
-3. Enter the URL: `https://github.com/hackerseraph/bronco-pilot`
+3. Enter the URL: `hackerseraph/bronco-pilot`
+  *Alternative full form:* `https://installer.comma.ai/hackerseraph/bronco-pilot`
 4. Tap Install
 
 **Documentation:**
