@@ -1,3 +1,52 @@
+Version 0.9.7-bronco-1.0 (2026-03-11)
+===================================
+**Bronco-Pilot: FrogPilot with Enhanced Steering Control**
+
+This is the first release of Bronco-Pilot, a custom fork of FrogPilot with advanced steering parameter override capabilities inspired by BluePilot.
+
+**New Features:**
+* 🎯 Steering Parameter Override System
+  * Runtime adjustment of torque control parameters without code changes
+  * Fine-tune lateral acceleration factor, friction, and acceleration offset
+  * Controlled via openpilot params for easy customization
+  * Safe, fail-safe design with comprehensive error handling
+  * Minimal CPU overhead (parameters checked every 3 seconds)
+  * Zero external dependencies - self-contained implementation
+
+**Safety Improvements:**
+* Simplified, auditable steering control override code
+* Comprehensive per-parameter exception handling
+* Graceful fallback if params unavailable
+* Type-safe parameter conversion
+* Extensive security review documentation included
+
+**How to Use:**
+* Enable override: `params set SteeringOverrideEnabled True`
+* Set lateral accel factor: `params set SteeringOverrideLatAccelFactor 1.2`
+* Set friction: `params set SteeringOverrideFriction 0.015`
+* Offset (optional): `params set SteeringOverrideLatAccelOffset 0.05`
+
+**Installation on comma device:**
+1. On your comma 3/3X, go to Settings → Software
+2. Tap Install Custom Software
+3. Enter the URL: `https://github.com/hackerseraph/bronco-pilot`
+4. Tap Install
+
+**Documentation:**
+* See `STEERING_OVERRIDE.md` for detailed parameter tuning guide
+* See `SECURITY_REVIEW.md` for safety analysis and testing recommendations
+
+**Base Version:**
+Built on FrogPilot 0.9.7 (FrogAi) + BluePilot steering concepts
+
+**Credits:**
+* FrogPilot: FrogAi community
+* BluePilot: BluePilotDev community
+* Steering safety: Haibin Wen, sunnypilot contributors
+* Custom integration: @hackerseraph
+
+---
+
 Version 0.9.7 (2024-06-13)
 ========================
 * New driving model
