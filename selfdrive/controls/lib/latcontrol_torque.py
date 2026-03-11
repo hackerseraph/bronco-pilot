@@ -4,18 +4,12 @@ from collections import deque
 
 from cereal import log
 from openpilot.common.filter_simple import FirstOrderFilter
-from openpilot.common.params import Params
 from openpilot.selfdrive.car.interfaces import FRICTION_THRESHOLD
 from openpilot.selfdrive.controls.lib.drive_helpers import MIN_SPEED, get_friction
 from openpilot.selfdrive.controls.lib.latcontrol import LatControl
 from openpilot.selfdrive.controls.lib.pid import PIDController
 from openpilot.selfdrive.controls.lib.vehicle_model import ACCELERATION_DUE_TO_GRAVITY
-
-try:
-  from openpilot.sunnypilot.selfdrive.controls.lib.latcontrol_torque_ext_override import LatControlTorqueExtOverride
-  STEERING_OVERRIDE_AVAILABLE = True
-except ImportError:
-  STEERING_OVERRIDE_AVAILABLE = False
+from openpilot.selfdrive.controls.lib.steering_override import SteeringOverride
 
 # At higher speeds (25+mph) we can assume:
 # Lateral acceleration achieved by a specific car correlates to
@@ -47,13 +41,8 @@ class LatControlTorque(LatControl):
     self.previous_measurement = 0.0
     self.measurement_rate_filter = FirstOrderFilter(0.0, 1 / (2 * np.pi * (MAX_LAT_JERK_UP - 0.5)), self.dt)
     
-    # Initialize steering override extension if available
-    self.steering_override_ext = None
-    if STEERING_OVERRIDE_AVAILABLE:
-      try:
-        self.steering_override_ext = LatControlTorqueExtOverride(CP)
-      except Exception as e:
-        print(f"Warning: Unable to initialize steering override extension: {e}")
+    # Initialize steering override
+    self.steering_override = SteeringOverride()
 
 
   def update_live_torque_params(self, latAccelFactor, latAccelOffset, friction):
@@ -70,7 +59,7 @@ class LatControlTorque(LatControl):
     pid_log = log.ControlsState.LateralTorqueState.new_message()
     
     # Apply steering override parameters if enabled
-    if self.steering_override_ext and self.steering_override_ext.update_override_torque_params(self.torque_params):
+    if self.steering_override.update_override(self.torque_params):
       self.update_limits()
     
     if not active:
